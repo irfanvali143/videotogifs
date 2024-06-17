@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIF Creator</title>
+</head>
+<body>
+    <h1>Create GIF from YouTube Video</h1>
+    <form id="videoForm">
+        <label for="youtubeUrl">YouTube Video URL:</label>
+        <input type="text" id="youtubeUrl" name="youtubeUrl" required>
+        <button type="submit">Create GIF</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('videoForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const url = document.getElementById('youtubeUrl').value;
+            const response = await fetch('/create-gif', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ youtubeUrl: url })
+            });
+            const data = await response.json();
+            if (data.success) {
+                document.getElementById('result').innerHTML = `<img src="${data.gifUrl}" alt="Generated GIF">`;
+            } else {
+                document.getElementById('result').innerText = 'Error creating GIF';
+            }
+        });
+    </script>
+</body>
+</html>
